@@ -1,0 +1,41 @@
+<header class="navbar-wrapper fixed-top">
+    <nav class="navbar navbar-expand-lg neon-nav px-3 py-2">
+        <a class="navbar-brand d-flex align-items-center gap-2" routerLink="home" routerLinkActive="active">
+            <div class="brand-logo d-flex align-items-center justify-content-center">
+                <img src="assets/imgs/upm.png" alt="UPM logo" width="70" height="50" class="me-2">
+            </div>
+            <div class="d-flex flex-column lh-1">
+                <span class="brand-title">U.P.M</span>
+                <span class="brand-sub">UFO Defense</span>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 nav-sections">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="home" routerLinkActive="active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="preferences" routerLinkActive="active">Preferences</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="play" routerLinkActive="active">Play</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="records" routerLinkActive="active">Records</a>
+                </li>
+            </ul>
+            <div class="d-flex gap-3 align-items-center">
+                <a routerLink="register" routerLinkActive="active" class="register-link">
+                    Register
+                </a>
+                <a routerLink="login" routerLinkActive="active" class="btn access-btn px-3 py-2">
+                    Login
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
