@@ -1,0 +1,22 @@
+.footer-neon {
+    background: rgba(11, 14, 17, 0.85);
+    border-top: 1px solid rgba(70, 90, 110, 0.25);
+    backdrop-filter: blur(10px);
+    color: #7F8FA6;
+    font-family: monospace;
+    font-size: 15px;
+}
+
+.status-label {
+    color: #66FCF1;
+}
+
+.status-online {
+    color: #39FF14;
+    font-weight: bold;
+}
+
+.footer-info {
+    color: #7F8FA6;
+}
+

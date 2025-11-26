@@ -1,0 +1,80 @@
+.navbar-wrapper {
+    backdrop-filter: blur(10px);
+    background: rgba(11, 14, 17, 0.8);
+    border-bottom: 1px solid rgba(70, 90, 110, 0.25);
+}
+
+.neon-nav {
+    background: rgba(11, 14, 17, 0.6) !important;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    background: rgba(31, 40, 51, 0.9);
+}
+
+.brand-logo:hover {
+    border-color: #66FCF1;
+    box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+}
+
+.brand-r {
+    font-family: 'Creepster', cursive;
+    font-size: 24px;
+    color: #39FF14;
+    position: relative;
+    top: 2px;
+}
+
+.brand-title {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: monospace;
+}
+
+.brand-sub {
+    color: #7F8FA6;
+    font-size: 20px;
+    font-family: monospace;
+}
+
+.nav-sections .nav-link {
+    color: #A8B3C1 !important;
+    font-size: 20px;
+    letter-spacing: 1px;
+    transition: 0.25s;
+}
+
+.nav-sections .nav-link:hover {
+    color: #66FCF1 !important;
+    text-shadow: 0 0 6px #66FCF1;
+    /* text-shadow: 0 0 5px rgba(102, 252, 241, 0.7); */
+}
+
+.access-btn {
+    border: 1px solid #66FCF1;
+    color: #66FCF1;
+    background: transparent;
+    font-size: 18px;
+    letter-spacing: 1px;
+    transition: 0.25s;
+}
+
+.access-btn:hover {
+    background: #66FCF1;
+    color: black;
+    box-shadow: 0 0 10px #66FCF1;
+}
+
+.register-link {
+    font-size: 20px;
+    color: #A8B3C1;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    color: #66FCF1;
+    text-shadow: 0 0 5px #66FCF1;
+}
