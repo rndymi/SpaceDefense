@@ -1,0 +1,142 @@
+.records-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.records-card {
+    width: 90%;
+    max-width: 950px;
+    background: #121820;
+    border-radius: 14px;
+    border: 1px solid rgba(77, 243, 255, 0.18);
+    backdrop-filter: blur(14px);
+    padding: 32px;
+    box-shadow: 0 0 12px rgba(77, 243, 255, 0.15),
+                inset 0 0 25px rgba(77, 243, 255, 0.07);
+}
+
+.records-title {
+    font-size: 30px;
+    color: #4DF3FF;
+}
+
+.records-title h2 {
+    color: #66fcf1;
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.config-divider {
+    border-color: rgba(77, 243, 255, 0.25);
+    margin: 16px 0 26px 0;
+}
+
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Fira Code", monospace;
+}
+
+.records-table thead {
+    background: rgba(10, 12, 16, 0.7);
+    color: #45a29e;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.records-table th {
+    padding: 14px 20px;
+    text-align: left;
+}
+
+.records-table tbody tr {
+    background: rgba(31, 40, 51, 0.5);
+    border-bottom: 1px solid rgba(102, 252, 241, 0.05);
+    transition: 0.25s ease;
+}
+
+.records-table tbody tr:hover {
+    background: rgba(102, 252, 241, 0.08);
+}
+
+.records-table tbody tr.negative {
+    background: rgba(255, 0, 80, 0.08) !important;
+}
+
+.records-table td {
+    padding: 14px 20px;
+    color: white;
+    font-size: 14px;
+}
+
+.rank {
+    color: #66fcf1;
+    font-weight: 600;
+    font-family: "Fira Code", monospace;
+}
+
+.user {
+    font-weight: 600;
+}
+
+.points {
+    color: #39ff14;
+    font-weight: 700;
+}
+
+.ufos {
+    color: #66b5ff;
+}
+
+.time {
+    color: #ffdd8b;
+}
+
+.date {
+    color: #c5c6c7;
+    text-align: right;
+}
+
+/* --- TOP 1 : fondo verde intenso --- */
+.records-table tbody tr.top1 {
+    background: rgba(36, 255, 0, 0.15);
+}
+.records-table tbody tr.top1:hover {
+    background: rgba(36, 255, 0, 0.22);
+}
+
+/* --- TOP 2 : fondo verde medio --- */
+.records-table tbody tr.top2 {
+    background: rgba(93, 255, 112, 0.12);
+}
+.records-table tbody tr.top2:hover {
+    background: rgba(93, 255, 112, 0.18);
+}
+
+/* --- TOP 3 : fondo verde suave --- */
+.records-table tbody tr.top3 {
+    background: rgba(168, 255, 182, 0.10);
+}
+.records-table tbody tr.top3:hover {
+    background: rgba(168, 255, 182, 0.15);
+}
+
+/* --- LAST POSITION (puesto #10): fondo rojo suave --- */
+.records-table tbody tr.last {
+    background: rgba(255, 0, 80, 0.12) !important;
+}
+
+/* --- Hover rojo más intenso para el último --- */
+.records-table tbody tr.last:hover {
+    background: rgba(255, 0, 80, 0.20) !important;
+}
+
+/* Text color for last row stays neon red */
+.records-table tbody tr.last td {
+    color: #ff3b6e !important;
+    font-weight: 700;
+}
+
+
