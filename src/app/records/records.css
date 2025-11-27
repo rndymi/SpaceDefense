@@ -99,7 +99,6 @@
     text-align: right;
 }
 
-/* --- TOP 1 : fondo verde intenso --- */
 .records-table tbody tr.top1 {
     background: rgba(36, 255, 0, 0.15);
 }
@@ -107,7 +106,6 @@
     background: rgba(36, 255, 0, 0.22);
 }
 
-/* --- TOP 2 : fondo verde medio --- */
 .records-table tbody tr.top2 {
     background: rgba(93, 255, 112, 0.12);
 }
@@ -115,7 +113,6 @@
     background: rgba(93, 255, 112, 0.18);
 }
 
-/* --- TOP 3 : fondo verde suave --- */
 .records-table tbody tr.top3 {
     background: rgba(168, 255, 182, 0.10);
 }
@@ -123,17 +120,14 @@
     background: rgba(168, 255, 182, 0.15);
 }
 
-/* --- LAST POSITION (puesto #10): fondo rojo suave --- */
 .records-table tbody tr.last {
     background: rgba(255, 0, 80, 0.12) !important;
 }
 
-/* --- Hover rojo más intenso para el último --- */
 .records-table tbody tr.last:hover {
     background: rgba(255, 0, 80, 0.20) !important;
 }
 
-/* Text color for last row stays neon red */
 .records-table tbody tr.last td {
     color: #ff3b6e !important;
     font-weight: 700;

@@ -1,1 +1,89 @@
-<p>register works!</p>
+<div class="register-wrapper container py-5">
+    <div class="register-card mx-auto">
+        <div class="register-header d-flex justify-content-between align-items-center">
+            <h2 class="register-title">Register</h2>
+            <i class="bi bi-person-plus-fill register-icon"></i>
+        </div>
+
+        <hr class="register-divider">
+
+        <form (ngSubmit)="createAccount()" #registerForm="ngForm" class="form-inner">
+            <div class="register-row d-flex flex-column flex-md-row justify-content-starstart align-items-center mb-4">
+
+                <div class="label-col">
+                    <label class="register-label">Username:</label>
+                </div>
+
+                <div class="input-box">
+                    <input 
+                        type="text"
+                        class="neon-input"
+                        placeholder="User identifier"
+                        name="username"
+                        required
+                        [(ngModel)]="username">
+                </div>
+            </div>
+
+            <div class="register-row d-flex flex-column flex-md-row justify-content-start align-items-center mb-4">
+
+                <div class="label-col">
+                    <label class="register-label">Email:</label>
+                </div>
+
+                <div class="input-box">
+                    <input 
+                        type="email"
+                        class="neon-input"
+                        placeholder="Email address"
+                        name="email"
+                        required
+                        [(ngModel)]="email">
+                </div>
+            </div>
+
+            <div class="register-row d-flex flex-column flex-md-row justify-content-start align-items-center mb-4">
+
+                <div class="label-col">
+                    <label class="register-label">Password:</label>
+                </div>
+
+                <div class="input-box">
+                    <input 
+                        type="password"
+                        class="neon-input"
+                        placeholder="Password"
+                        name="password"
+                        required
+                        [(ngModel)]="password">
+                </div>
+            </div>
+
+            <div class="register-row d-flex flex-column flex-md-row justify-content-start align-items-center mb-4">
+
+                <div class="label-col">
+                    <label class="register-label">Repeat Password:</label>
+                </div>
+
+                <div class="input-box">
+                    <input 
+                        type="password"
+                        class="neon-input"
+                        placeholder="Repeat Password"
+                        name="repeatPassword"
+                        required
+                        [(ngModel)]="repeatPassword">
+                </div>
+            </div>
+
+            <button type="submit" class="btn neon-btn-primary w-100 py-3 mt-3">
+                Create Account
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="snackbar" #snackbar>
+    <span class="snack-icon">✔</span>
+    <span>Account created successfully!</span>
+</div>

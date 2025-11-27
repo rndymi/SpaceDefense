@@ -33,8 +33,15 @@
     margin: 16px 0 26px 0;
 }
 
-.config-label { color: #E8FAFF; font-weight: 600; }
-.config-desc { color: #97AEBE; font-size: 13px; }
+.config-label { 
+    color: #E8FAFF; 
+    font-weight: 600; 
+}
+
+.config-desc { 
+    color: #97AEBE; 
+    font-size: 13px; 
+}
 
 .range-box {
     background: #101820;
