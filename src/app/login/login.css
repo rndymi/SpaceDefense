@@ -1,0 +1,139 @@
+.login-wrapper {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 70px;
+}
+
+.login-card {
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    background: #121820;
+    border-radius: 14px;
+    border: 1px solid rgba(77, 243, 255, 0.18);
+    backdrop-filter: blur(14px);
+    padding: 32px;
+    box-shadow: 0 0 12px rgba(77, 243, 255, 0.15),
+                inset 0 0 25px rgba(77, 243, 255, 0.07);
+}
+
+.login-title {
+    font-size: 30px;
+    color: #4DF3FF;
+}
+
+.login-subtitle {
+    color: #8FA7B9;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.login-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.login-label {
+    font-size: 13px;
+    color: #75E6FF;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(77, 243, 255, 0.25);
+    border-radius: 8px;
+    color: #E6FFFF;
+    transition: 0.25s;
+}
+
+.login-input:focus {
+    border-color: #4DF3FF;
+    box-shadow: 0 0 12px rgba(77, 243, 255, 0.4);
+}
+
+.neon-btn-primary {
+    background: #4DF3FF;
+    color: #000;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    transition: 0.25s;
+}
+
+.neon-btn-primary:hover {
+    background: #67FAFF;
+    box-shadow: 0 0 12px #4DF3FF;
+}
+
+.snackbar {
+    position: fixed;
+    bottom: 80px;
+    right: 40px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: 0.35s;
+    font-weight: 600;
+    color: white;
+}
+
+.snackbar.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.snackbar.success {
+    background: rgba(10, 30, 12, 0.85);
+    border: 1px solid rgba(60, 255, 120, 0.5);
+    color: #A2FFB0;
+}
+
+.snackbar.success .snackbar-icon {
+    color: #39FF14;
+    content: "✔";
+}
+
+.snackbar.error {
+    background: rgba(40, 0, 0, 0.85);
+    border: 1px solid rgba(255, 60, 60, 0.5);
+    color: #FFB8B8;
+}
+
+.snackbar.error .snackbar-icon {
+    color: #FF4444;
+    content: "✘";
+}
+
+.snackbar.warning {
+    background: rgba(60, 50, 0, 0.85);
+    border: 1px solid rgba(255, 230, 70, 0.5);
+    color: #FFF8C2;
+}
+
+.snackbar.warning .snackbar-icon {
+    color: #FFEA55;
+    content: "⚠";
+}
+
+.snackbar.info {
+    background: rgba(0, 60, 90, 0.85);
+    border: 1px solid rgba(60, 200, 255, 0.5);
+    color: #D3F4FF;
+}
+
+.snackbar.info .snackbar-icon {
+    color: #5FE0FF;
+    content: "ℹ";
+}
+

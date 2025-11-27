@@ -12,7 +12,7 @@ export class Preferences {
   ufos: number = 1;
   timer: number = 60;
 
-  @ViewChild('snackbar') snackbar!: ElementRef<HTMLDivElement>;
+  @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
 
   ngAfterViewInit() {
     this.updateSliderColor();
@@ -33,19 +33,28 @@ export class Preferences {
 
   savePreferences() {
     this.updateSliderColor();
-    this.showSnackbar();
+    this.showSnackbar("Preferences saved!", "success");
     
     console.log("Preferences saved:", this.ufos, this.timer);
     
   }
 
-
   
-  showSnackbar() {
-    const el = this.snackbar.nativeElement;
-    el.classList.add('show');
+  private showSnackbar(message: string, type: "success" | "error" | "warning" | "info" = "success") {
 
-    setTimeout(() => el.classList.remove('show'), 2200);
+    if (!this.snackbar) return;
+    const sb = this.snackbar.nativeElement;
+
+    sb.classList.remove("success", "error", "warning", "info");
+
+    sb.querySelector(".snackbar-message").textContent = message;
+
+    sb.classList.add(type);
+    sb.classList.add("show");
+
+    setTimeout(() => {
+        sb.classList.remove("show");
+    }, 2400);
   }
 
 }

@@ -38,7 +38,7 @@ export class Register {
       return;
     }
 
-    this.showSnackbar();
+    this.showSnackbar("✔ Account created successfully!", "success");
 
     this.username = "";
     this.email = "";
@@ -47,15 +47,21 @@ export class Register {
 
   }
 
-  private showSnackbar() {
-    if (!this.snackbar) return;
+  private showSnackbar(message: string, type: "success" | "error" | "warning" | "info" = "success") {
 
+    if (!this.snackbar) return;
     const sb = this.snackbar.nativeElement;
-    sb.classList.add('show');
+
+    sb.classList.remove("success", "error", "warning", "info");
+
+    sb.querySelector(".snackbar-message").textContent = message;
+
+    sb.classList.add(type);
+    sb.classList.add("show");
 
     setTimeout(() => {
-      sb.classList.remove('show');
-    }, 2400);
+        sb.classList.remove("show");
+    }, 2500);
   }
 
 }
