@@ -1,0 +1,6 @@
+.missile {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  pointer-events: none;
+}

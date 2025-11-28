@@ -1,1 +1,61 @@
-<p>play works!</p>
+<div class="play-wrapper">
+    <div #playArea class="play-area">
+        <div class="hud-ingame">
+            <div class="hud-card small">
+                <span class="hud-label">Time: </span>
+                <span class="hud-value">{{ timeRemaining }}</span>
+            </div>
+
+            <div class="hud-card small">
+                <span class="hud-label">Score: </span>
+                <span class="hud-value">{{ score }}</span>
+            </div>
+        </div>
+
+        <button class="pause-btn" (click)="togglePause()">❚❚</button>
+        
+        <app-ufo *ngFor="let idx of ufoIndexes"></app-ufo>
+        <app-missile></app-missile>
+
+        <div class="overlay" *ngIf="!started && !gameEnded">
+            <div class="overlay-card">
+                <h2>READY TO LAUNCH</h2>
+                <p>Press PLAY to start the simulation.</p>
+
+                <button class="btn primary" (click)="startGame()">PLAY</button>
+            </div>
+        </div>
+        
+        <div class="overlay" *ngIf="paused">
+            <div class="overlay-card">
+                <h2>GAME PAUSED</h2>
+                <p>Resuming requires operator input.</p>
+
+                <button class="btn primary" (click)="resumeGame()">RESUME</button>
+                <button class="btn secondary" (click)="abortGame()">ABORT</button>
+            </div>
+        </div>
+
+        <div class="overlay" *ngIf="gameEnded">
+            <div class="overlay-card">
+                <h2>GAME OVER</h2>
+
+                <div class="stats">
+                <p><strong>Score:</strong> {{ score }}</p>
+                <p><strong>UFOs:</strong> {{ prefs.numUFOs }}</p>
+                <p><strong>Time:</strong> {{ prefs.gameTime }}s</p>
+                </div>
+
+                <button class="btn primary" (click)="restartGame()">PLAY AGAIN</button>
+
+                <button *ngIf="!saved" class="btn success" (click)="saveScore()">
+                SAVE SCORE
+                </button>
+
+                <button class="btn secondary" (click)="exitGame()">EXIT</button>
+
+                <p *ngIf="saved" class="saved-msg">✔ Score saved!</p>
+            </div>
+        </div>
+    </div>
+</div>
