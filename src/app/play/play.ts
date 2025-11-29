@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, HostListener, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Missile} from './entities/missile/missile';
@@ -7,6 +7,7 @@ import { PreferencesLoader, GamePreferences } from './engine/preferences-loader'
 import { GameEngine } from './engine/game-engine';
 import { GameLoop } from './engine/game-loop';
 import { Scores } from '../shared/services/scores'; 
+import { PlayState } from '../shared/services/play-state';
 
 @Component({
   selector: 'app-play',
@@ -15,7 +16,7 @@ import { Scores } from '../shared/services/scores';
   templateUrl: './play.html',
   styleUrl: './play.css',
 })
-export class Play implements AfterViewInit {
+export class Play implements AfterViewInit, OnDestroy {
 
   @ViewChild('playArea', { static: true }) playArea!: ElementRef<HTMLDivElement>;
   @ViewChild(Missile) missileCmp!: Missile;
@@ -32,11 +33,11 @@ export class Play implements AfterViewInit {
   gameEnded: boolean = false;
   saved: boolean = false;
 
-showStartOverlay: boolean = true;
+  showStartOverlay: boolean = false;
 
   private engine!: GameEngine;
 
-  constructor(private router: Router, private scores: Scores, private cdRef: ChangeDetectorRef) {
+  constructor(private router: Router, private scores: Scores, private cdRef: ChangeDetectorRef, private playState: PlayState) {
     this.prefs = PreferencesLoader.load();
     this.timeRemaining = this.prefs.gameTime;
     this.ufoIndexes = Array.from({ length: this.prefs.numUFOs }, (_, i) => i);
@@ -58,6 +59,30 @@ showStartOverlay: boolean = true;
         () => this.handleGameEnd()
       );
 
+      const saved = this.playState.load();
+      if (saved) {
+        this.started = true;
+        this.paused = true;
+        this.showStartOverlay = false;
+
+        this.score = saved.score;
+        this.timeRemaining = saved.timeRemaining;
+
+        // Restaurar posición de UFOs
+        saved.ufoPositions.forEach((data: any, i: number) => {
+          const el = ufos[i].getElement();
+          el.style.left = data.left;
+          el.dataset['step'] = data.step;
+        });
+
+        // Restaurar misil
+        const missile = missileElement;
+        missile.style.left = saved.missile.left;
+        missile.style.bottom = saved.missile.bottom;
+
+        // Restaurar datos al engine
+        this.engine.restoreState(saved);
+      }
       
       GameLoop.start(() => {
         this.cdRef.detectChanges();
@@ -65,6 +90,31 @@ showStartOverlay: boolean = true;
 
 
     });
+  }
+
+  // GUARDAR ESTADO AL SALIR DE ESTA VISTA
+  ngOnDestroy(): void {
+
+    if (this.engine && this.started && !this.gameEnded) {
+
+      this.engine.pause();
+
+      this.playState.save({
+        score: this.score,
+        timeRemaining: this.timeRemaining,
+
+        ufoPositions: this.ufoCmps.toArray().map((u) => ({
+          left: u.getElement().style.left,
+          step: u.getElement().dataset['step']
+        })),
+
+        missile: {
+          left: this.missileCmp.getElement().style.left,
+          bottom: this.missileCmp.getElement().style.bottom,
+          launched: this.engine['missileLaunched']
+        }
+      });
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -97,10 +147,10 @@ showStartOverlay: boolean = true;
     this.gameEnded = false;
     this.paused = false;
     this.saved = false;
+    this.playState.clear();
 
     this.engine.start();
   }
-
 
   togglePause() {
     if (this.gameEnded) return;
@@ -119,17 +169,20 @@ showStartOverlay: boolean = true;
 
   resumeGame() {
     this.paused = false;
+    this.playState.clear();
     this.engine?.resume();
   }
 
   abortGame() {
     this.engine?.destroy();
+    this.playState.clear();
     this.router.navigate(['/home']);
   }
 
   private handleGameEnd(): void {
     this.gameEnded = true;
     this.paused = false;
+    this.playState.clear();
   }
 
   saveScore() {
@@ -148,25 +201,26 @@ showStartOverlay: boolean = true;
   }
 
   restartGame() {
-  if (!this.engine) {
-    return;
+    if (!this.engine) {
+      return;
+    }
+
+    this.started = true;
+    this.gameEnded = false;
+    this.paused = false;
+    this.saved = false;
+    this.playState.clear();
+
+    this.score = 0;
+    this.timeRemaining = this.prefs.gameTime;
+
+    this.engine.destroy();
+
+    this.engine.start();
   }
 
-  this.started = true;
-  this.gameEnded = false;
-  this.paused = false;
-  this.saved = false;
-
-  this.score = 0;
-  this.timeRemaining = this.prefs.gameTime;
-
-  this.engine.destroy();
-
-  this.engine.start();
-}
-
-
   exitGame() {
+    this.playState.clear();
     this.router.navigate(['/home']);
   }
 

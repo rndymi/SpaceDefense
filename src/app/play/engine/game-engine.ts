@@ -38,6 +38,17 @@ export class GameEngine {
       this.notifyTime();
   }
 
+  restoreState(state: any): void {
+    this.score = state.score;
+    this.timeRemaining = state.timeRemaining;
+
+    this.notifyScore();
+    this.notifyTime();
+
+    this.missileLaunched = state.missile.launched;
+  }
+
+
   start(): void {
     this.startTimer(true);
     this.startUfoMovement();

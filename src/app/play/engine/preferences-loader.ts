@@ -10,7 +10,7 @@ export class PreferencesLoader {
         try {
             prefs = JSON.parse(sessionStorage.getItem('preferences') || '{}');
         } catch (e) {
-            console.error('Failed to load game preferences:', e);
+            //console.error('Failed to load game preferences:', e);
             prefs = {};
         }
         
