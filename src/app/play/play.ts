@@ -99,7 +99,6 @@ export class Play implements AfterViewInit, OnDestroy {
         this.cdRef.detectChanges();
       });
 
-
     });
   }
 
@@ -188,7 +187,20 @@ export class Play implements AfterViewInit, OnDestroy {
   abortGame() {
     this.engine?.destroy();
     this.playState.clear();
-    this.router.navigate(['/home']);
+
+    this.started = true;
+    this.paused = false;
+    this.gameEnded = false;
+    this.saved = false;
+
+    //this.showStartOverlay = false;
+
+    this.score = 0;
+    this.timeRemaining = this.prefs.gameTime;
+
+    this.engine.resetForNewGame();
+    this.engine.start();
+    //this.router.navigate(['/home']);
   }
 
   private handleGameEnd(): void {
@@ -225,7 +237,7 @@ export class Play implements AfterViewInit, OnDestroy {
 
     this.engine.destroy();
 
-    this.engine.resetGame();
+    this.engine.resetForNewGame();
 
     this.engine.start();
   }

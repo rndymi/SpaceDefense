@@ -3,13 +3,6 @@ import { Collision } from "./collision";
 import { Missile } from "../entities/missile/missile";
 import { Ufo } from "../entities/ufo/ufo";
 
-interface UfoData {
-  cmp: Ufo;
-  el: HTMLElement;
-  x: number;
-  y: number;
-  vx: number;
-}
 
 export class GameEngine {
 
@@ -24,6 +17,11 @@ export class GameEngine {
 
   private missileLaunched = false;
 
+  private initialMissileLeft: string = "";
+private initialMissileBottom: string = "";
+private missileInitialPositionCaptured = false;
+
+
   constructor(
       private playAreaElement: HTMLElement,
       private missileElement: HTMLElement,
@@ -34,6 +32,13 @@ export class GameEngine {
       private onGameEnd: () => void
   ) {
       this.timeRemaining = prefs.gameTime;
+
+      if (!this.missileInitialPositionCaptured) {
+        this.initialMissileLeft = this.missileElement.style.left || "0px";
+        this.initialMissileBottom = this.missileElement.style.bottom || "5px";
+        this.missileInitialPositionCaptured = true;
+      }
+
       this.notifyScore();
       this.notifyTime();
   }
@@ -55,6 +60,8 @@ export class GameEngine {
 
     this.notifyScore();
     this.notifyTime();
+
+    this.resetMissileFull();  
   }
 
   resetGame(): void {
@@ -65,8 +72,6 @@ export class GameEngine {
     this.notifyScore();
     this.notifyTime();
   }
-
-
 
   start(): void {
     this.startTimer(true);
@@ -128,6 +133,8 @@ export class GameEngine {
       this.notifyTime();
 
       if (this.timeRemaining <= 0) {
+        this.timeRemaining = 0;
+        this.notifyTime();
         this.endGame();
       }
 
@@ -213,6 +220,19 @@ export class GameEngine {
 
     this.missileElement.style.bottom = '5px';
   }
+
+  private resetMissileFull(): void {
+    if (this.missileIntervalId) {
+      clearInterval(this.missileIntervalId);
+      this.missileIntervalId = null;
+    }
+
+    this.missileLaunched = false;
+
+    this.missileElement.style.left = this.initialMissileLeft;
+    this.missileElement.style.bottom = this.initialMissileBottom;
+  }
+
 
   private checkHit(): number {
     const missile = this.missileElement;
