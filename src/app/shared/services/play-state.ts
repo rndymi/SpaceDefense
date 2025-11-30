@@ -14,8 +14,12 @@ export class PlayState {
     this.existSaveState = true;
   }
 
-  load() {
-    return this.savedState;
+  load(clearAfterRead: boolean = false) {
+    const state = this.savedState;
+    if (clearAfterRead) {
+      this.clear();
+    }
+    return state;
   }
 
   clear() {

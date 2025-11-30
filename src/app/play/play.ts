@@ -63,6 +63,15 @@ export class Play implements AfterViewInit, OnDestroy {
       const missileElement = this.missileCmp.getElement();
       const ufos = this.ufoCmps.toArray();
 
+      const areaWidth = this.playArea.nativeElement.clientWidth;
+
+      ufos.forEach((ufo, i) => {
+        const el = ufo.getElement();
+        const randomX = Math.floor(Math.random() * (areaWidth - 80));
+        el.style.left = `${randomX}px`;
+        el.style.top = `${50 + i * 70}px`;
+      });
+
       this.engine = new GameEngine(
         this.playArea.nativeElement,
         missileElement,
@@ -73,7 +82,8 @@ export class Play implements AfterViewInit, OnDestroy {
         () => this.handleGameEnd()
       );
 
-      const saved = this.playState.load();
+      const saved = this.playState.load(true);
+
       if (saved) {
         this.started = true;
         this.paused = true;
@@ -93,6 +103,16 @@ export class Play implements AfterViewInit, OnDestroy {
         missile.style.bottom = saved.missile.bottom;
 
         this.engine.restoreState(saved);
+      } else {
+        this.started = false;
+        this.paused = false;
+        this.gameEnded = false;
+        this.saved = false;
+
+        this.score = 0;
+        this.timeRemaining = this.prefs.gameTime;
+
+        this.startGame();
       }
       
       GameLoop.start(() => {

@@ -1,10 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { PlayState } from '../shared/services/play-state';
 
 @Component({
   selector: 'app-preferences',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './preferences.html',
   styleUrl: './preferences.css',
 })
@@ -13,6 +15,11 @@ export class Preferences {
   timer: number = 60;
 
   @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
+
+  constructor(
+    private router: Router,
+    private playState: PlayState
+  ) {}
 
   ngAfterViewInit() {
     this.updateSliderColor();
@@ -29,18 +36,31 @@ export class Preferences {
     el.style.setProperty("--range-percent", `${percent}%`);
   }
 
-
-
   savePreferences() {
+    const prefs = {
+      numUFOs: this.ufos,
+      gameTime: this.timer
+    };
+
+    sessionStorage.setItem("Prefs", JSON.stringify(prefs));
+    this.playState.clear();
+
     this.updateSliderColor();
     this.showSnackbar("Preferences saved!", "success");
-    
-    console.log("Preferences saved:", this.ufos, this.timer);
-    
-  }
 
+    //console.log("Preferences saved:", prefs);
+    setTimeout(() => {
+
+      sessionStorage.removeItem("PlayState");
+
+      this.router.navigate(['/play']);
+    }, 2000);
+}
   
-  private showSnackbar(message: string, type: "success" | "error" | "warning" | "info" = "success") {
+  private showSnackbar(
+      message: string, 
+      type: "success" | "error" | "warning" | "info" = "success"
+  ) {
 
     if (!this.snackbar) return;
     const sb = this.snackbar.nativeElement;

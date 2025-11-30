@@ -1,26 +1,23 @@
 export interface GamePreferences {
-    gameTime: number;
     numUFOs: number;
+    gameTime: number;
 }
 
 export class PreferencesLoader {
 
     static load(): GamePreferences {
-        let prefs: any = {};
-        try {
-            prefs = JSON.parse(sessionStorage.getItem('preferences') || '{}');
-        } catch (e) {
-            //console.error('Failed to load game preferences:', e);
-            prefs = {};
+        const raw = sessionStorage.getItem("Prefs");
+
+        if (!raw) {
+            return { numUFOs: 1, gameTime: 60 };
         }
         
-        let gameTime = Number(prefs.gameTime ?? 60);
-        let numUFOs = Number(prefs.numUFOs ?? 1);
+        const parsed = JSON.parse(raw);
 
-        if (isNaN(gameTime) || gameTime <= 10) gameTime = 60;
-        if (isNaN(numUFOs) || numUFOs < 1) numUFOs = 1;
-        
-        return { gameTime, numUFOs };
+        return { 
+            numUFOs: parsed.numUFOs ?? 1, 
+            gameTime: parsed.gameTime ?? 60
+        };
     }
 
 }
