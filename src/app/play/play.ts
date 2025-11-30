@@ -37,10 +37,24 @@ export class Play implements AfterViewInit, OnDestroy {
 
   private engine!: GameEngine;
 
-  constructor(private router: Router, private scores: Scores, private cdRef: ChangeDetectorRef, private playState: PlayState) {
+  constructor(private router: Router, 
+              private scores: Scores, 
+              private cdRef: ChangeDetectorRef, 
+              private playState: PlayState
+            ) {
     this.prefs = PreferencesLoader.load();
     this.timeRemaining = this.prefs.gameTime;
     this.ufoIndexes = Array.from({ length: this.prefs.numUFOs }, (_, i) => i);
+
+    if (this.playState.existSaveState && this.playState.load()) {
+      this.started = true;
+      this.paused = true;
+      this.gameEnded = false;
+    } else {
+      this.started = false;
+      this.paused = false;
+      this.gameEnded = false;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -68,19 +82,16 @@ export class Play implements AfterViewInit, OnDestroy {
         this.score = saved.score;
         this.timeRemaining = saved.timeRemaining;
 
-        // Restaurar posición de UFOs
         saved.ufoPositions.forEach((data: any, i: number) => {
           const el = ufos[i].getElement();
           el.style.left = data.left;
           el.dataset['step'] = data.step;
         });
 
-        // Restaurar misil
         const missile = missileElement;
         missile.style.left = saved.missile.left;
         missile.style.bottom = saved.missile.bottom;
 
-        // Restaurar datos al engine
         this.engine.restoreState(saved);
       }
       
@@ -92,9 +103,10 @@ export class Play implements AfterViewInit, OnDestroy {
     });
   }
 
-  // GUARDAR ESTADO AL SALIR DE ESTA VISTA
   ngOnDestroy(): void {
 
+    GameLoop.stop();
+    
     if (this.engine && this.started && !this.gameEnded) {
 
       this.engine.pause();
@@ -211,10 +223,9 @@ export class Play implements AfterViewInit, OnDestroy {
     this.saved = false;
     this.playState.clear();
 
-    this.score = 0;
-    this.timeRemaining = this.prefs.gameTime;
-
     this.engine.destroy();
+
+    this.engine.resetGame();
 
     this.engine.start();
   }

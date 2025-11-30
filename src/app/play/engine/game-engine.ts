@@ -48,6 +48,25 @@ export class GameEngine {
     this.missileLaunched = state.missile.launched;
   }
 
+  resetForNewGame(): void {
+    this.score = 0;
+    this.timeRemaining = this.prefs.gameTime;
+    this.missileLaunched = false;
+
+    this.notifyScore();
+    this.notifyTime();
+  }
+
+  resetGame(): void {
+    this.score = 0;
+    this.timeRemaining = this.prefs.gameTime;
+    this.missileLaunched = false;
+
+    this.notifyScore();
+    this.notifyTime();
+  }
+
+
 
   start(): void {
     this.startTimer(true);
@@ -109,10 +128,9 @@ export class GameEngine {
       this.notifyTime();
 
       if (this.timeRemaining <= 0) {
-        this.timeRemaining = 0;
-        this.notifyTime();
         this.endGame();
       }
+
     }, 1000);
   }
 
@@ -234,14 +252,29 @@ export class GameEngine {
     }
   }
 
-  resume() {
-    this.startUfoMovement();
+  resume(): void {
+    if (!this.timerIntervalId) {
+      this.timerIntervalId = window.setInterval(() => {
+        this.timeRemaining--;
+        this.notifyTime();
+        if (this.timeRemaining <= 0) {
+          this.timeRemaining = 0;
+          this.notifyTime();
+          this.endGame();
+        }
+      }, 1000);
+    }
+
+    if (!this.ufoIntervalId) {
+      this.startUfoMovement();
+    }
 
     if (this.missileLaunched && !this.missileIntervalId) {
-      this.missileIntervalId = window.setInterval(() => this.updateMissile(), 10);
+      this.missileIntervalId = window.setInterval(
+        () => this.updateMissile(),
+        10
+      );
     }
-
-    this.startTimer(false);
-    }
+  }
 
 }
