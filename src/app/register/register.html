@@ -22,6 +22,9 @@
                         name="username"
                         required
                         [(ngModel)]="username">
+                    <div *ngIf="errorMessage === 'username'" class="input-error">
+                        Username is required.
+                    </div>
                 </div>
             </div>
 
@@ -38,7 +41,11 @@
                         placeholder="Email address"
                         name="email"
                         required
+                        autocomplete="email"
                         [(ngModel)]="email">
+                    <div *ngIf="errorMessage === 'email'" class="input-error">
+                        Email is required.
+                    </div>
                 </div>
             </div>
 
@@ -55,7 +62,11 @@
                         placeholder="Password"
                         name="password"
                         required
+                        autocomplete="new-password"
                         [(ngModel)]="password">
+                    <div *ngIf="errorMessage === 'password'" class="input-error">
+                        Password must be at least 6 characters.
+                    </div>
                 </div>
             </div>
 
@@ -72,7 +83,11 @@
                         placeholder="Repeat Password"
                         name="repeatPassword"
                         required
+                        autocomplete="new-password"
                         [(ngModel)]="repeatPassword">
+                    <div *ngIf="errorMessage === 'repeat'" class="input-error">
+                        Passwords do not match.
+                    </div>
                 </div>
             </div>
 
