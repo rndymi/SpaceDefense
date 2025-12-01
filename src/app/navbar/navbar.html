@@ -28,13 +28,35 @@
                     <a class="nav-link" routerLink="records" routerLinkActive="active">Records</a>
                 </li>
             </ul>
-            <div class="d-flex gap-3 align-items-center">
+            <div class="d-flex gap-3 align-items-center" *ngIf="!(auth.authState$ | async)?.logged">
                 <a routerLink="register" routerLinkActive="active" class="register-link">
                     Register
                 </a>
                 <a routerLink="login" routerLinkActive="active" class="btn access-btn px-3 py-2">
                     Login
                 </a>
+            </div>
+
+            <div class="user-area d-flex gap-3 align-items-center"
+                *ngIf="(auth.authState$ | async)?.logged" routerLink="/login">
+
+                <div class="vr vr-glow"></div>
+
+                <div class="user-avatar">
+                    {{ ((auth.authState$ | async)?.username ?? 'U')[0] | uppercase }}
+                </div>
+
+                <span class="username-text">
+                    {{ (auth.authState$ | async)?.username }}
+                </span>
+
+                <button class="logout-btn"
+                        (click)="logout()"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+
             </div>
         </div>
     </nav>
