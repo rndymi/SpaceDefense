@@ -1,4 +1,4 @@
-<div class="login-wrapper container">
+<div *ngIf="!(auth$ | async)?.logged" class="login-wrapper container">
     <div class="login-card mx-auto">
         <h2 class="login-title">Identity User</h2>
         <p class="login-subtitle">Please enter your credentials to login.</p>
@@ -30,6 +30,20 @@
                 Login
             </button>
         </form>
+    </div>
+</div>
+
+<div *ngIf="(auth$ | async)?.logged" class="login-wrapper container">
+    <div class="login-card mx-auto">
+        <h2 class="login-title">👤 Welcome {{ (auth$ | async)?.username }}</h2>
+        <p class="login-subtitle">
+            Token expires in:
+            <strong>{{ ((auth$ | async)?.tokenExpiresIn ?? 0) | authTime }}</strong>
+        </p>
+
+        <button class="btn neon-btn-danger w-100 py-3 mt-3" (click)="logout()">
+            Logout
+        </button>
     </div>
 </div>
 

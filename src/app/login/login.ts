@@ -1,12 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { User } from '../shared/services/user';
-import { Tokenmgr } from '../shared/services/tokenmgr';
+import { AuthState } from '../shared/services/auth-state';
+import { CommonModule } from '@angular/common';
+import { AuthTimePipe } from '../shared/pipes/auth-time-pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule, AuthTimePipe],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -16,30 +17,41 @@ export class Login {
 
   @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
 
-  constructor(private usrMgr: User, private tokenMgr: Tokenmgr) {}
+  constructor(private authState: AuthState) {}
+
+  get auth$() {
+    return this.authState.authState$;
+  }
 
   doLogin(): void {
-    this.usrMgr.userLogin(this.username, this.password)
+    this.authState.login(this.username, this.password)
     .subscribe({
       next: (token: string) => {
-        this.tokenMgr.saveToken(token);
+        this.authState.onLoginSuccess(this.username, token);
         this.showSnackbar("✔ Login successful!", "success");
         //console.log('Login successful, token saved.', token);
       },
       error: (err) => {
-        //console.error('Login failed:', err);
         this.showSnackbar("✘ Login failed. Please try again.", "error");
+        //console.error('Login failed:', err);
       }
     });
   }
 
-  private showSnackbar(message: string, type: "success" | "error" | "warning" | "info" = "success") {
+  logout() {
+    this.authState.logout();
+    this.showSnackbar("✔ Logged out successfully.", "info");
+  }
+
+  private showSnackbar(
+    message: string, 
+    type: "success" | "error" | "warning" | "info" = "success"
+  ) {
 
     if (!this.snackbar) return;
     const sb = this.snackbar.nativeElement;
 
     sb.classList.remove("success", "error", "warning", "info");
-
     sb.querySelector(".snackbar-message").textContent = message;
 
     sb.classList.add(type);
