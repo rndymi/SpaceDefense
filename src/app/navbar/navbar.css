@@ -126,8 +126,8 @@
   width: 36px;
   height: 36px;
   border: none;
-  border-radius: 8px; /* bordes semi cuadrados */
-  background: #c62828; /* rojo oscuro */
+  border-radius: 8px;
+  background: #c62828;
   color: #ffffff;
   display: flex;
   align-items: center;

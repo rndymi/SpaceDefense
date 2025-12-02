@@ -18,8 +18,8 @@ export class GameEngine {
   private missileLaunched = false;
 
   private initialMissileLeft: string = "";
-private initialMissileBottom: string = "";
-private missileInitialPositionCaptured = false;
+  private initialMissileBottom: string = "";
+  private missileInitialPositionCaptured = false;
 
 
   constructor(
