@@ -34,7 +34,7 @@
 </div>
 
 <div *ngIf="(auth$ | async)?.logged" class="login-wrapper container">
-    <div class="login-card mx-auto">
+    <div class="login-card-user mx-auto">
         <h2 class="login-title">👤 Welcome {{ (auth$ | async)?.username }}</h2>
         <p class="login-subtitle">
             Token expires in:
