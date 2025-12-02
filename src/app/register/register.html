@@ -21,9 +21,24 @@
                         placeholder="User identifier"
                         name="username"
                         required
-                        [(ngModel)]="username">
+                        [(ngModel)]="username"
+                        (blur)="checkUsername()">
                     <div *ngIf="errorMessage === 'username'" class="input-error">
                         Username is required.
+                    </div>
+                    <div class="validation">
+                        <span *ngIf="userNameChecked" class="checking">
+                            Checking...
+                            <img src="./assets/imgs/sprites/wait.gif" alt="Loading">
+                        </span>
+
+                        <span *ngIf="!userNameChecked && userNameExists" class="error-existuser">
+                            ✕ Username already exists
+                        </span>
+
+                        <span *ngIf="!userNameChecked && userNameFree" class="success-freeuser">
+                            ✔ Username available
+                        </span>
                     </div>
                 </div>
             </div>

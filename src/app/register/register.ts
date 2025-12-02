@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../shared/services/user';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-register',
@@ -20,12 +21,76 @@ export class Register {
 
   errorMessage: string = "";
 
+  userNameExists = false;
+  userNameFree = false;
+  userNameChecked = false;
+  private lastCheckedValue: string | null = null;
+
+
   @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
 
   constructor(
     private userService: User,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  
+  checkUsername() {
+  const trimmed = (this.username || "").trim();
+
+  if (!trimmed) {
+    this.userNameChecked = false;
+    this.userNameExists = false;
+    this.userNameFree = false;
+    this.lastCheckedValue = null;
+    this.cdr.detectChanges();
+    return;
+  }
+
+  if (trimmed === this.lastCheckedValue) return;
+
+  this.lastCheckedValue = trimmed;
+
+  this.userNameChecked = true;
+  this.userNameExists = false;
+  this.userNameFree = false;
+  this.cdr.detectChanges();
+
+  const MIN_DURATION = 500;
+  const startTime = Date.now();
+
+  this.userService.checkUserExists(trimmed)
+    .subscribe({
+      next: () => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, MIN_DURATION - elapsed);
+
+        setTimeout(() => {
+          this.userNameChecked = false;
+          this.userNameExists = true;
+          this.userNameFree = false;
+          this.cdr.detectChanges();
+        }, remaining);
+      },
+      error: (err) => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, MIN_DURATION - elapsed);
+
+        setTimeout(() => {
+          if (err.status === 404) {
+            this.userNameExists = false;
+            this.userNameFree = true;
+          } else {
+            console.error("Error checking username", err);
+          }
+          this.userNameChecked = false;
+          this.cdr.detectChanges();
+        }, remaining);
+      }
+    });
+
+  }
 
   createAccount() {
     this.errorMessage = "";

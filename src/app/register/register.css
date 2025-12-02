@@ -155,3 +155,21 @@
     font-size: 0.9rem;
     margin-top: 4px;
 }
+
+.error-existuser {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.input-success {
+    color: #44ff44;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.success-freeuser {
+    color: #44ff44;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}

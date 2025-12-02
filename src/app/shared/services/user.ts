@@ -11,6 +11,12 @@ export class User {
   
   constructor(private http: HttpClient) { }
 
+  checkUserExists(username: string) {
+    const url = BASE_URL + 'users/';
+    return this.http.get(url + username, { observe: 'response' });
+  }
+
+
   registerUser(username: string, email: string, password: string): Observable<any> {
     const url = BASE_URL + 'users';
 
