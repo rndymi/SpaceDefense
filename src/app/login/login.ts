@@ -30,12 +30,10 @@ export class Login {
 
         this.authState.onLoginSuccess(this.username, token);
         this.showSnackbar("✔ Login successful!", "success");
-
-        // Detectar si estamos en el flujo de guardar score (Game Over → Login Required)
+        
         const pending = sessionStorage.getItem("pendingGameRecord");
 
         if (pending) {
-          // 👉 CASO 1: Venimos de guardar score → regresar a PLAY
           setTimeout(() => {
             window.location.href = '/play';
           }, 1000);

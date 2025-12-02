@@ -41,7 +41,7 @@ export class Records implements OnInit {
     if (this.username) {
       this.userTopScore$ = this.scores.getUserTopScores(this.username);
     } else {
-      this.userTopScore$ = of([]); // No logueado → lista vacía
+      this.userTopScore$ = of([]);
     }
   }
 
