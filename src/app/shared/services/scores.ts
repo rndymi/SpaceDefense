@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { BASE_URL } from '../constants/constants';
+import { AuthState } from './auth-state';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class Scores {
-  constructor(private http: HttpClient) {  }
+  constructor(private http: HttpClient, private authState: AuthState) {  }
 
   getTopScores(): Observable<any> {
     return this.http.get(BASE_URL + 'records');
@@ -32,6 +33,12 @@ export class Scores {
         headers,
         observe: 'response'
       }
+    ).pipe(tap(resp => {
+        const newToken = resp.headers.get('Authorization');
+        if (newToken) {
+          this.authState.refreshToken(newToken);
+        }
+      })
     );
   }
 

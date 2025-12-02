@@ -16,8 +16,23 @@ export class AuthState {
   
   private readonly TOKEN_DURATION = 10 * 60; // 10 minutes in seconds
   private timerSub: Subscription | null = null;
+  private pedingScore: any = null;
 
-  private authState = new BehaviorSubject<AuthStatus>({
+  setPendingScore(scoreData: any) {
+    this.pedingScore = scoreData;
+  }
+
+  consumePendingScore() {
+    const score = this.pedingScore;
+    this.pedingScore = null;
+    return score;
+  }
+
+  hasPendingScore(): boolean {
+    return this.pedingScore !== null;
+  }
+
+  public authState = new BehaviorSubject<AuthStatus>({
     logged: false,
     username: null,
     tokenExpiresIn: 0,
@@ -97,6 +112,30 @@ export class AuthState {
       });
     });
   }
+
+  refreshToken(newToken: string) {
+    this.tokenMgr.saveToken(newToken);
+
+    const expireAt = Date.now() + this.TOKEN_DURATION * 1000;
+
+    const session = sessionStorage.getItem('authSession');
+    if (!session) return;
+
+    const old = JSON.parse(session);
+    old.token = newToken;
+    old.expireAt = expireAt;
+
+    sessionStorage.setItem("authSession", JSON.stringify(old));
+
+    this.startCountDown();
+    
+    this.authState.next({
+      logged: true,
+      username: old.username,
+      tokenExpiresIn: this.TOKEN_DURATION
+    });
+  }
+
 
   logout() {
     sessionStorage.removeItem('authSession');

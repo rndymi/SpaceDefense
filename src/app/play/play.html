@@ -41,21 +41,53 @@
                 <h2>GAME OVER</h2>
 
                 <div class="stats">
-                <p><strong>Score:</strong> {{ score }}</p>
-                <p><strong>UFOs:</strong> {{ prefs.numUFOs }}</p>
-                <p><strong>Time:</strong> {{ prefs.gameTime }}s</p>
+                    <p>
+                        <strong>Score:</strong> {{ score }}
+                    </p>
+                    <p>
+                        <strong>UFOs:</strong> {{ prefs.numUFOs }}
+                    </p>
+                    <p>
+                        <strong>Time:</strong> {{ prefs.gameTime }}s
+                    </p>
                 </div>
 
                 <button class="btn primary" (click)="restartGame()">PLAY AGAIN</button>
 
-                <button *ngIf="!saved" class="btn success" (click)="saveScore()">
-                SAVE SCORE
+                <button class="btn success" (click)="saveScore()"
+                    [disabled]="saved">
+                    SAVE SCORE
                 </button>
 
                 <button class="btn secondary" (click)="exitGame()">EXIT</button>
 
-                <p *ngIf="saved" class="saved-msg">✔ Score saved!</p>
+                <!--<p *ngIf="saved" class="saved-msg">✔ Score saved!</p>-->
+            </div>
+
+            <div class="overlay" *ngIf="showLoginPrompt">
+                <div class="overlay-card">
+                    <h2>LOGIN REQUIRED</h2>
+                    <p>You must login to save your score.</p>
+
+                    <button class="btn primary" (click)="goToLogin()">LOGIN</button>
+                    <button class="btn secondary" (click)="closeLoginPrompt()">CANCEL</button>
+                </div>
+            </div>
+
+            <div class="overlay" *ngIf="showTokenExpired">
+                <div class="overlay-card">
+                    <h2>SESSION EXPIRED</h2>
+                    <p>Your session has expired. Please login again.</p>
+
+                    <button class="btn primary" (click)="goToLogin()">LOGIN</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="snackbar" #snackbar>
+    <span class="snackbar-icon"></span>
+    <span class="snackbar-message"></span>
+</div>
+

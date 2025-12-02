@@ -8,6 +8,7 @@ import { GameEngine } from './engine/game-engine';
 import { GameLoop } from './engine/game-loop';
 import { Scores } from '../shared/services/scores'; 
 import { PlayState } from '../shared/services/play-state';
+import { AuthState } from '../shared/services/auth-state';
 
 @Component({
   selector: 'app-play',
@@ -18,6 +19,7 @@ import { PlayState } from '../shared/services/play-state';
 })
 export class Play implements AfterViewInit, OnDestroy {
 
+  @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
   @ViewChild('playArea', { static: true }) playArea!: ElementRef<HTMLDivElement>;
   @ViewChild(Missile) missileCmp!: Missile;
   @ViewChildren(Ufo) ufoCmps!: QueryList<Ufo>;
@@ -35,12 +37,16 @@ export class Play implements AfterViewInit, OnDestroy {
 
   showStartOverlay: boolean = false;
 
+  showLoginPrompt: boolean = false;
+  showTokenExpired: boolean = false;
+
   private engine!: GameEngine;
 
   constructor(private router: Router, 
               private scores: Scores, 
               private cdRef: ChangeDetectorRef, 
-              private playState: PlayState
+              private playState: PlayState,
+              private authState: AuthState
             ) {
     this.prefs = PreferencesLoader.load();
     this.timeRemaining = this.prefs.gameTime;
@@ -57,7 +63,13 @@ export class Play implements AfterViewInit, OnDestroy {
     }
   }
 
+  get auth$() {
+    return this.authState.authState$;
+  }
+
   ngAfterViewInit(): void {
+
+    this.saved = false;
     
     setTimeout(() => {
       const missileElement = this.missileCmp.getElement();
@@ -81,7 +93,7 @@ export class Play implements AfterViewInit, OnDestroy {
         (time) => this.timeRemaining = time,
         () => this.handleGameEnd()
       );
-
+      
       const saved = this.playState.load(true);
 
       if (saved) {
@@ -103,27 +115,45 @@ export class Play implements AfterViewInit, OnDestroy {
         missile.style.bottom = saved.missile.bottom;
 
         this.engine.restoreState(saved);
+
       } else {
-        this.started = false;
-        this.paused = false;
-        this.gameEnded = false;
-        this.saved = false;
+        const pendingDataStr = sessionStorage.getItem("pendingGameRecord");
 
-        this.score = 0;
-        this.timeRemaining = this.prefs.gameTime;
+        if (pendingDataStr) {
+          const pendingData = JSON.parse(pendingDataStr);
 
-        this.startGame();
+          this.score = pendingData.score;
+          this.timeRemaining = pendingData.time;
+
+          this.prefs.numUFOs = pendingData.ufos;
+
+          this.started = true;
+          this.paused = false;
+          this.gameEnded = true;
+          this.saved = false;
+
+        } else {
+          this.started = false;
+          this.paused = false;
+          this.gameEnded = false;
+          this.saved = false;
+
+          this.score = 0;
+          this.timeRemaining = this.prefs.gameTime;
+
+          this.startGame();
+        }
       }
-      
+
       GameLoop.start(() => {
         this.cdRef.detectChanges();
       });
 
+      // this.autoSaveScoreIfNeeded();
     });
   }
 
   ngOnDestroy(): void {
-
     GameLoop.stop();
     
     if (this.engine && this.started && !this.gameEnded) {
@@ -227,21 +257,53 @@ export class Play implements AfterViewInit, OnDestroy {
     this.gameEnded = true;
     this.paused = false;
     this.playState.clear();
+
+    this.saved = false;
   }
 
   saveScore() {
     if (this.saved) return;
 
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      const pendingData = {
+        score: this.score,
+        ufos: this.prefs.numUFOs,
+        time: this.prefs.gameTime,
+        date: Date.now()
+      };
+
+      sessionStorage.setItem("pendingGameRecord", JSON.stringify(pendingData));
+
+      this.showLoginPrompt = true;
+      return;
+    }
+
     this.scores.saveRecord(this.score, this.prefs.numUFOs, this.prefs.gameTime)
       .subscribe({
-        next: () => {
-          //console.log("Score saved!");
+        next: (resp) => {
+          this.showSnackbar("✔ Score saved successfully!", "success");
           this.saved = true;
+
+          sessionStorage.removeItem("pendingGameRecord");
         },
         error: (err) => {
-          //console.error("Error saving record:", err);
+          if (err.status === 401) {
+            this.showTokenExpired = true;
+            return;
+          }
+          this.showSnackbar("✕ Error saving score.", "error");
         }
       });
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']/*, { queryParams: { returnUrl: '/play' } }*/);
+  }
+
+  closeLoginPrompt() {
+    this.showLoginPrompt = false;
   }
 
   restartGame() {
@@ -256,15 +318,66 @@ export class Play implements AfterViewInit, OnDestroy {
     this.playState.clear();
 
     this.engine.destroy();
-
     this.engine.resetForNewGame();
-
     this.engine.start();
   }
 
   exitGame() {
     this.playState.clear();
     this.router.navigate(['/home']);
+  }
+/*
+  private autoSaveScoreIfNeeded(): void {
+    const pending = sessionStorage.getItem("pendingSaveScore");
+    if (!pending) return;
+      
+    const token = sessionStorage.getItem("token");
+    if (!token) return;
+
+    const dataStr = sessionStorage.getItem("pendingGameRecord");
+    if (!dataStr) {
+      //console.warn("No pending game data found.");
+      sessionStorage.removeItem("pendingSaveScore");
+      this.showSnackbar("No pending score to save.", "warning");
+      return;
+    }
+    
+    const data = JSON.parse(dataStr);
+
+    this.scores.saveRecord(data.score, data.ufos, data.time).subscribe({
+      next: (resp) => {
+        this.saved = true;
+        //console.log("Auto score saved after login!", resp);
+        this.showSnackbar("Score saved successfully!", "success");
+
+        sessionStorage.removeItem("pendingGameRecord");
+        sessionStorage.removeItem("pendingSaveScore");
+      },
+      error: (err) => {
+        //console.error("Error auto-saving score:", err);
+        this.showSnackbar("Error saving score after login.", "error");
+      }
+    });
+  }
+*/
+
+  private showSnackbar(
+    message: string, 
+    type: "success" | "error" | "warning" | "info" = "success"
+  ) {
+
+    if (!this.snackbar) return;
+    const sb = this.snackbar.nativeElement;
+
+    sb.classList.remove("success", "error", "warning", "info");
+    sb.querySelector(".snackbar-message").textContent = message;
+
+    sb.classList.add(type);
+    sb.classList.add("show");
+
+    setTimeout(() => {
+        sb.classList.remove("show");
+    }, 2500);
   }
 
 }

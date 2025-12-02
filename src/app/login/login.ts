@@ -30,6 +30,11 @@ export class Login {
         this.authState.onLoginSuccess(this.username, token);
         this.showSnackbar("✔ Login successful!", "success");
         //console.log('Login successful, token saved.', token);
+        //sessionStorage.setItem("pendingSaveScore", "true");
+
+        setTimeout(() => {
+          window.location.href = '/play';
+        }, 1000);
       },
       error: (err) => {
         this.showSnackbar("✘ Login failed. Please try again.", "error");
