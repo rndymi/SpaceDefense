@@ -65,7 +65,6 @@ export class Navbar implements AfterViewInit {
 
   }
 
-
   logout() {
     this.auth.logout();
   }

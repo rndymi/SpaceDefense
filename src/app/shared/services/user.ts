@@ -16,7 +16,6 @@ export class User {
     return this.http.get(url + username, { observe: 'response' });
   }
 
-
   registerUser(username: string, email: string, password: string): Observable<any> {
     const url = BASE_URL + 'users';
 

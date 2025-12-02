@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Observable, timer } from 'rxjs';
+import { Observable, timer, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Scores } from '../shared/services/scores';
+import { AuthState } from '../shared/services/auth-state';
 
 class Score {
   username!: string;
@@ -16,14 +17,16 @@ class Score {
   selector: 'app-records',
   standalone: true,
   imports: [CommonModule, DatePipe],
-  providers: [DatePipe], 
+  providers: [DatePipe, AuthState], 
   templateUrl: './records.html',
   styleUrl: './records.css',
 })
 export class Records implements OnInit {
   scoresList$!: Observable<any[]>;
+  userTopScore$!: Observable<any[]>;
+  username: string | null = null;
 
-  constructor(private scores: Scores, private datePipe: DatePipe) { }
+  constructor(private scores: Scores, private datePipe: DatePipe, private authState: AuthState) { }
 
   ngOnInit(): void {
     //this.scoresList$ = this.scores.getTopScores();
@@ -32,6 +35,14 @@ export class Records implements OnInit {
         return this.scores.getTopScores();
       })
     );
+
+    this.username = this.authState.getUsername();
+
+    if (this.username) {
+      this.userTopScore$ = this.scores.getUserTopScores(this.username);
+    } else {
+      this.userTopScore$ = of([]); // No logueado → lista vacía
+    }
   }
 
 }

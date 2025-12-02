@@ -24,24 +24,30 @@ export class Login {
   }
 
   doLogin(): void {
-    this.authState.login(this.username, this.password)
+  this.authState.login(this.username, this.password)
     .subscribe({
       next: (token: string) => {
+
         this.authState.onLoginSuccess(this.username, token);
         this.showSnackbar("✔ Login successful!", "success");
-        //console.log('Login successful, token saved.', token);
-        //sessionStorage.setItem("pendingSaveScore", "true");
 
-        setTimeout(() => {
-          window.location.href = '/play';
-        }, 1000);
+        // Detectar si estamos en el flujo de guardar score (Game Over → Login Required)
+        const pending = sessionStorage.getItem("pendingGameRecord");
+
+        if (pending) {
+          // 👉 CASO 1: Venimos de guardar score → regresar a PLAY
+          setTimeout(() => {
+            window.location.href = '/play';
+          }, 1000);
+
+        } 
       },
-      error: (err) => {
+      error: () => {
         this.showSnackbar("✘ Login failed. Please try again.", "error");
-        //console.error('Login failed:', err);
       }
     });
   }
+
 
   logout() {
     this.authState.logout();

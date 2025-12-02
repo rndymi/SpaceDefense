@@ -5,8 +5,8 @@ import { Play } from './play/play';
 import { Records } from './records/records';
 import { Register } from './register/register';
 import { Login } from './login/login';
-import { Logout } from './logout/logout';
 import { NotFound } from './not-found/not-found';
+import { noAuthGuard } from './shared/guards/no-auth-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,8 +14,10 @@ export const routes: Routes = [
     { path: 'preferences', component: Preferences },
     { path: 'play', component: Play },
     { path: 'records', component: Records },
-    { path: 'register', component: Register },
+    { path: 'register', 
+        component: Register,
+        canActivate: [noAuthGuard] 
+    },
     { path: 'login', component: Login },
-    { path: 'logout', component: Logout },
     { path: '**', component: NotFound }
 ];

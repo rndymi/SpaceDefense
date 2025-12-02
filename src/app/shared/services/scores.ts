@@ -15,6 +15,17 @@ export class Scores {
     return this.http.get(BASE_URL + 'records');
   }
 
+  getUserTopScores(username: string): Observable<any> {
+    const token = sessionStorage.getItem('token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': token
+    });
+    
+    return this.http.get(BASE_URL + 'records/' + username, 
+      { headers }
+    );
+  }
+
   saveRecord(score: number, ufos: number, time: number): Observable<any> {
     const token = sessionStorage.getItem('token') || '';
 

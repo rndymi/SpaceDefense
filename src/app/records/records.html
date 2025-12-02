@@ -1,18 +1,17 @@
 <div class="records-wrapper container py-5">
     <div class="records-card mx-auto">
-        <h2 class="records-title mb-4">Records</h2>
-        
+        <h2 class="records-title mb-4">Global Records</h2>
         <hr class="config-divider">
-        
+
         <table class="records-table">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>User</th>
-                    <th>Points</th>
-                    <th>UFOs</th>
-                    <th>Secs.</th>
-                    <th>Date</th>
+                <th>#</th>
+                <th>User</th>
+                <th>Points</th>
+                <th>UFOs</th>
+                <th>Secs.</th>
+                <th>Date</th>
                 </tr>
             </thead>
 
@@ -22,14 +21,50 @@
                     [class.top2]="i === 1"
                     [class.top3]="i === 2"
                     [class.last]="i === c - 1">
-                    <td class="rank">#{{i + 1}}</td>
-                    <td class="user">{{score.username}}</td>
-                    <td class="points">{{score.punctuation}}</td>
-                    <td class="ufos">{{score.ufos}}</td>
-                    <td class="time">{{score.disposedTime}}</td>
-                    <td class="date">{{score.recordDate | date : 'dd/MM/yyyy'}}</td>
+                <td class="rank">#{{ i + 1 }}</td>
+                <td class="user">{{ score.username }}</td>
+                <td class="points">{{ score.punctuation }}</td>
+                <td class="ufos">{{ score.ufos }}</td>
+                <td class="time">{{ score.disposedTime }}</td>
+                <td class="date">{{ score.recordDate | date : 'dd/MM/yyyy' }}</td>
                 </tr>
             </tbody>
         </table>
+
+        <div *ngIf="username && (userTopScore$ | async) as userScores" class="records-section mt-5">
+            <h2 class="records-title mb-4">Your Top 10 Records</h2>
+            <hr class="config-divider">
+
+            <table class="records-table" *ngIf="userScores.length > 0; else noUserRecords">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Score</th>
+                    <th>UFOs</th>
+                    <th>Time</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr *ngFor="let rec of userScores; let i = index"
+                [class.top1]="i === 0">
+                    <td class="rank">#{{ i + 1 }}</td>
+                    <td class="user">{{ rec.username }}</td>
+                    <td class="points">{{ rec.punctuation }}</td>
+                    <td class="ufos">{{ rec.ufos }}</td>
+                    <td class="time">{{ rec.disposedTime }}s</td>
+                    <td class="date">{{ rec.recordDate | date : 'dd/MM/yyyy' }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ng-template #noUserRecords>
+                <p class="no-records text-center mt-3">
+                    You don't have personal records yet.
+                </p>
+            </ng-template>
+        </div>
     </div>
 </div>
