@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthState } from '../shared/services/auth-state';
 import { CommonModule } from '@angular/common';
 import { AuthTimePipe } from '../shared/pipes/auth-time-pipe';
@@ -17,7 +18,10 @@ export class Login {
 
   @ViewChild('snackbar', { static: false }) snackbar!: ElementRef;
 
-  constructor(private authState: AuthState) {}
+  constructor(
+    private authState: AuthState, 
+    private router: Router
+  ) {}
 
   get auth$() {
     return this.authState.authState$;
@@ -46,10 +50,9 @@ export class Login {
     });
   }
 
-
   logout() {
     this.authState.logout();
-    this.showSnackbar("✔ Logged out successfully.", "info");
+    this.router.navigate(['/home']);
   }
 
   private showSnackbar(

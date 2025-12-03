@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable, tap, map } from 'rxjs';
 import { BASE_URL } from '../constants/constants';
 import { AuthState } from './auth-state';
 
@@ -15,14 +15,24 @@ export class Scores {
     return this.http.get(BASE_URL + 'records');
   }
 
-  getUserTopScores(username: string): Observable<any> {
+  getUserTopScores(username: string): Observable<any[]> {
     const token = sessionStorage.getItem('token') || '';
+
     const headers = new HttpHeaders({
       'Authorization': token
     });
-    
-    return this.http.get(BASE_URL + 'records/' + username, 
-      { headers }
+
+    return this.http.get<any[]>(BASE_URL + 'records/' + username, {
+      headers,
+      observe: 'response'
+    }).pipe(
+      tap((resp: HttpResponse<any[]>) => {
+        const newToken = resp.headers.get('Authorization');
+        if (newToken) {
+          this.authState.refreshToken(newToken);
+        }
+      }),
+      map((resp: HttpResponse<any[]>) => resp.body ?? [])
     );
   }
 

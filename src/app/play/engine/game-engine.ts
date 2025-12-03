@@ -201,7 +201,7 @@ export class GameEngine {
     }
 
     if (bottom > areaHeight) {
-      this.score -= 50;
+      this.score -= 25;
       this.notifyScore();
       this.resetMissileVertical();
       return;
@@ -232,7 +232,6 @@ export class GameEngine {
     this.missileElement.style.left = this.initialMissileLeft;
     this.missileElement.style.bottom = this.initialMissileBottom;
   }
-
 
   private checkHit(): number {
     const missile = this.missileElement;

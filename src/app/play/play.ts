@@ -257,11 +257,34 @@ export class Play implements AfterViewInit, OnDestroy {
     //this.router.navigate(['/home']);
   }
 
+  private computeFinalScore(rawScore: number, ufos: number, gameTimeSeconds: number): number {
+    const minutes = gameTimeSeconds / 60;
+    let score = rawScore;
+
+    if (minutes > 0) {
+      score = score / minutes;
+    }
+
+    const extraUfos = Math.max(0, ufos - 1);
+    score = score - (extraUfos * 50);
+
+    score = Math.round(score / 25) * 25;
+
+    return score;
+  }
+
   private handleGameEnd(): void {
+    const finalScore = this.computeFinalScore(
+      this.score,
+      this.prefs.numUFOs,
+      this.prefs.gameTime
+    );
+    this.score = finalScore;
+
     this.gameEnded = true;
     this.paused = false;
-    this.playState.clear();
 
+    this.playState.clear();
     this.saved = false;
   }
 

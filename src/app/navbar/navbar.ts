@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthState } from '../shared/services/auth-state';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +12,10 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar implements AfterViewInit {
 
-  constructor(public auth: AuthState) {}
+  constructor(
+    public auth: AuthState, 
+    private router: Router
+  ) {}
 
   ngAfterViewInit(): void {
 
@@ -67,6 +70,8 @@ export class Navbar implements AfterViewInit {
 
   logout() {
     this.auth.logout();
+    //this.router.navigate(['/home']);
+    window.location.href = '/home'; 
   }
 
   goProfile() { 
