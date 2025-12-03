@@ -180,6 +180,10 @@ export class Play implements AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKey(event: KeyboardEvent) {
+    if (event.code === 'Space' || event.code === 'Spacebar') {
+      event.preventDefault();
+    }
+
     if (!this.engine || !this.started) return;
 
     if (this.paused || this.gameEnded) return;
