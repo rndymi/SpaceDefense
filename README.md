@@ -1,59 +1,79 @@
-# UFODefenseAng
+## Descripción
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+**SpaceDefense / UFODefenseAng** es un mini-juego arcade web construido con Angular, donde debes defender el planeta derribando UFOs antes de que termine el tiempo.
 
-## Development server
+### ¿Qué hace el jugador?
+- Controla un misil en la parte inferior del escenario.
+- Ajusta dificultad antes de jugar:
+  - Número de UFOs simultáneos (1 a 5).
+  - Duración de partida (60/120/180 segundos).
+- Intenta maximizar la puntuación:
+  - +100 por impacto.
+  - -25 por disparo fallido.
+- Al terminar, puede guardar su récord (requiere login).
 
-To start a local development server, run:
+### Controles
+- `←` mover misil a la izquierda
+- `→` mover misil a la derecha
+- `Espacio` disparar
+- `Esc` pausar/reanudar
 
+### Loop de juego (resumen)
+- Movimiento continuo de UFOs y misil con temporizadores.
+- Detección de colisiones misil/UFO.
+- Cuenta atrás de tiempo y cierre automático al llegar a 0.
+- Cálculo final de score normalizado por tiempo y dificultad (nº de UFOs).
+
+---
+
+## Tecnologías
+
+- **Angular 21** (`@angular/core`, `@angular/router`, `@angular/forms`, `@angular/common/http`)
+- **Angular CLI 21**
+- **TypeScript ~5.9**
+- **RxJS** para estado de autenticación y polling de rankings.
+- **Bootstrap 5 + Popper + Bootstrap Icons** para UI.
+- Arquitectura basada en **Standalone Components** (sin `NgModule` raíz).
+
+---
+
+## Cómo jugar / probar
+
+### Requisitos
+- Node.js
+- npm ( `npm@11.4.1`).
+
+### Instalación
+```bash
+npm install
+```
+## Ejecutar en local
+
+Para iniciar un servidor de desarrollo local, ejecute:
+
+```bash
+npm start
+```
+o
 ```bash
 ng serve
 ```
+Abrir en `http://localhost:4200/`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
+### Build
 
 ```bash
-ng generate component component-name
+npm run build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
+### Tests
 
 ```bash
-ng generate --help
+npm test
 ```
 
-## Building
+El repositorio incluye tests unitarios (`*.spec.ts`).
 
-To build the project run:
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
